@@ -1,30 +1,23 @@
 # GARYSUM888's Northcoders News API
 
-## Welcome to my first solo project - A cloned version of BE NC-News
 
-Per insturction from ticket #2, all original comments have been commented out and are to be replaced by instructions on how to create the environment variables for those who wishes to clone this project and run it locally.
 
-## Steps
+## Steps to run this project locally
 
-1. Have the Postgres SQL installed and run 
-2. Clone my repo to your local environment (https://github.com/garysum88/BE-NC-News.git)
-3. Install pg-format in NPM
-    ```
-    npm i pg-format
-    ```
-4. Create .env.test and .env.developement
+1. Create .env.test and .env.developement. for the name of database name, it can be any database. However, you need to make sure that the names must match with the names specified in db/setup.sql
 
     .env.test: 
 
     ```
-    PGDATABASE=nc_news_test
+    PGDATABASE=database_name_here
     ```
 
     .env.development: 
 
     ```
-    PGDATABASE=nc_news
+    PGDATABASE=database_name_here
     ```
+
 
 5. Execute the following in CLI to execute the database     set-up and seeding process...
 
@@ -34,11 +27,11 @@ Per insturction from ticket #2, all original comments have been commented out an
     ```
 
 
-6. I think we are good to go :)
 
 
 
-<!-- 
+
+
 ## Background
 
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
@@ -93,4 +86,4 @@ git branch -D <local branch>
 
 To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
 
-The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_ -->
+The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
