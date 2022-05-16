@@ -14,7 +14,7 @@ describe("Error Handling", () => {
 
     test("returns status 404 for non-existing path", () => {
         return request(app).
-        get("/api/gofuckyourselfChina").
+        get("/api/404test").
         expect(404).then((response) => {
             expect(response.body).toEqual({ message: "Endpoint not found" });
         })
