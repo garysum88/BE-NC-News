@@ -7,5 +7,4 @@ const getTopics = (req,res) => {
 }
 
 
-
 module.exports = { getTopics }
