@@ -22,7 +22,7 @@ describe("Error Handling", () => {
 
 })
 
-describe("3-GET /api/topics", () => {
+describe("3. GET /api/topics", () => {
     test("returns status 200, object that contains all topics from the db (with the property of slug and description", () => {
         return request(app).
         get("/api/topics").
@@ -149,3 +149,26 @@ describe("5. PATCH /api/articles/:article_id", () => {
         })
     })
 })
+
+
+
+describe("6. GET /api/users", () => {
+    test("returns status 200 and an array of objects (with username property", () => {
+
+        return request(app)
+        .get("/api/users")
+        .expect(200).then(({body : {users}}) => {
+            expect(users).toHaveLength(4)
+
+            users.forEach((user) => {
+                expect(user).toEqual(
+                    expect.objectContaining({
+                        username : expect.any(String)
+                    })
+                )
+            })
+
+        })
+    })
+})
+
