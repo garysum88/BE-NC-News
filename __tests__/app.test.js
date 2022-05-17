@@ -57,8 +57,8 @@ describe("4. GET /api/articles/:article_id", () => {
           }
         return request(app).
         get("/api/articles/1").
-        expect(200).then((article) => {
-            expect(article.body).toEqual(expected);
+        expect(200).then(({body}) => {
+            expect(body.article).toEqual(expected);
         })
     })
 
