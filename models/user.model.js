@@ -6,4 +6,7 @@ exports.fetchUsers = () => {
     .then((users)=>{
         return users.rows
     })
+    .catch((err) => {
+        console.log(err)
+    })
 }
