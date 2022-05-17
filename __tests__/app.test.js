@@ -57,8 +57,8 @@ describe("4. GET /api/articles/:article_id", () => {
           }
         return request(app).
         get("/api/articles/1").
-        expect(200).then((article) => {
-            expect(article.body).toEqual(expected);
+        expect(200).then(({body}) => {
+            expect(body.article).toEqual(expected);
         })
     })
 
@@ -77,6 +77,75 @@ describe("4. GET /api/articles/:article_id", () => {
         get("/api/articles/helloworld").
         expect(400).then((response) => {
             expect(response.body.message).toEqual("Bad request");
+        })
+    })
+})
+
+
+describe("5. PATCH /api/articles/:article_id", () => {
+    test("returns status 202 and the updated object", () => {
+
+        const obj = { inc_votes: 10 }
+        const expected =  {
+            author: 'butter_bridge',
+            title: 'Living in the shadow of a great man',
+            article_id: 1,
+            body: 'I find this existence challenging',
+            topic: 'mitch',
+            created_at: '2020-07-09T20:11:00.000Z',
+            votes: 110
+          }
+
+        return request(app)
+        .patch("/api/articles/1")
+        .send(obj)
+        .expect(202).then(({body}) => {
+            expect(body.article).toEqual(expected)
+        })
+    })
+
+    test("returns status 400 when passed an empty object,", () => {
+
+        return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400).then(({body}) => {
+            expect(body).toEqual({message : "Bad request"})
+        })
+
+    })
+
+    test("returns status 400 when passed an object which does not have a key name 'inc_votes'", () => {
+
+        return request(app)
+        .patch("/api/articles/1")
+        .send({superhero:100})
+        .expect(400).then(({body}) => {
+            expect(body).toEqual({message : "Bad request"})
+        })
+    })
+
+    test("returns status 400 when passed an object with non-numberirc value in 'inc_votes'", () => {
+
+        const obj = { inc_votes: "ten votes" }
+
+        return request(app)
+        .patch("/api/articles/1")
+        .send(obj)
+        .expect(400).then(({body}) => {
+            expect(body).toEqual({message : "You should enter a number in inc_votes"})
+        })
+    })
+
+    test("returns status 404 when the article_id does not exist", () => {
+
+        const obj = { inc_votes: 10 }
+
+        return request(app)
+        .patch("/api/articles/1989604")
+        .send(obj)
+        .expect(404).then(({body}) => {
+            expect(body.message).toBe("Article with that article_id does not exist")
         })
     })
 })
