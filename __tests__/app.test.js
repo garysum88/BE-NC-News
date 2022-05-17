@@ -100,8 +100,7 @@ describe("5. PATCH /api/articles/:article_id", () => {
         .patch("/api/articles/1")
         .send(obj)
         .expect(202).then(({body}) => {
-            const article = body
-            expect(body).toEqual(expected)
+            expect(body.article).toEqual(expected)
         })
     })
 
@@ -146,7 +145,7 @@ describe("5. PATCH /api/articles/:article_id", () => {
         .patch("/api/articles/1989604")
         .send(obj)
         .expect(404).then(({body}) => {
-            expect(body.message).toEqual("Article with that article_id does not exist")
+            expect(body.message).toBe("Article with that article_id does not exist")
         })
     })
 })
