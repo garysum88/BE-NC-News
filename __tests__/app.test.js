@@ -70,4 +70,13 @@ describe("4. GET /api/articles/:article_id", () => {
             expect(response.body.message).toEqual("Article with that article_id does not exist");
         })
     })
+
+    test("returns status 400 with an invalid article_id (e.g not a number)", () => {
+
+        return request(app).
+        get("/api/articles/helloworld").
+        expect(400).then((response) => {
+            expect(response.body.message).toEqual("Bad request");
+        })
+    })
 })

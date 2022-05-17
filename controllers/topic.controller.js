@@ -10,6 +10,7 @@ const getArticle = (req,res, next) => {
 
     const articleId = req.params.article_id
 
+
     fetchArticle(articleId).then((article)=>{
         res.status(200).send(article)
     })

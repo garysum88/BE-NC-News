@@ -11,6 +11,9 @@ exports.fetchTopics = () => {
 }
 
 exports.fetchArticle = (articleId) => {
+
+    console.log(typeof articleId,"<< here")
+
     return db.query('SELECT author, title, article_id, body, topic, created_at, votes FROM articles WHERE article_id = $1',[articleId])
     .then((response)=>{
 
@@ -21,6 +24,7 @@ exports.fetchArticle = (articleId) => {
         if (response.rows.length === 0) {
             return Promise.reject({status: 404, message:"Article with that article_id does not exist"})
         }
+
         return response.rows[0]
     })
 }
