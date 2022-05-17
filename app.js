@@ -1,11 +1,16 @@
 const express = require("express")
 const app = express()
 const { getTopics } = require("./controllers/topic.controller.js")
-const { getArticle } = require("./controllers/article.controller.js")
+const { getArticle, patchArticle } = require("./controllers/article.controller.js")
+
+app.use(express.json())
 
 app.get("/api/topics",getTopics)
 
 app.get("/api/articles/:article_id",getArticle)
+
+app.patch("/api/articles/:article_id",patchArticle)
+
 
 
 // 400 Error message
