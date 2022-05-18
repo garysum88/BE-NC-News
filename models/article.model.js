@@ -2,12 +2,19 @@ const db = require('../db/connection.js')
 
 exports.fetchArticle = (articleId) => {
 
-    return db.query('SELECT author, title, article_id, body, topic, created_at, votes FROM articles WHERE article_id = $1',[articleId])
-    .then((response)=>{
+    const queryStr = `
+    SELECT articles.* ,
+    COUNT(comments.comment_id) ::INT AS comment_count
+    FROM articles 
+    LEFT JOIN comments
+    ON articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;
+    `
 
-        // Added a customised error 404 where the article_id does not exist (this returning nothing from the database)
-        
-        // This check the rows of response, if the length equals to 0, this means no article belongs to that article_id
+    return db.query(queryStr,[articleId])
+    .then((response)=>{
+ 
 
         if (response.rows.length === 0) {
             return Promise.reject({status: 404, message:"Article with that article_id does not exist"})
@@ -35,8 +42,8 @@ exports.updateArticle = (articleId,newVote) => {
             if (response.rows.length === 0) {
                 return Promise.reject({status: 404, message:"Article with that article_id does not exist"})
             }
-
-        return response.rows[0]
+                return response.rows[0]
         })
 }
 }
+

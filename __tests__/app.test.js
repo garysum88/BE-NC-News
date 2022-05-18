@@ -46,7 +46,11 @@ describe("4. GET /api/articles/:article_id", () => {
 
     test("returns status 200 with the article specified in the param", () => {
 
-        const expected =  {
+        return request(app).
+        get("/api/articles/1").
+        expect(200).then(({body}) => {
+            expect(body.article).toEqual(
+                expect.objectContaining({
             author: 'butter_bridge',
             title: 'Living in the shadow of a great man',
             article_id: 1,
@@ -54,11 +58,8 @@ describe("4. GET /api/articles/:article_id", () => {
             topic: 'mitch',
             created_at: '2020-07-09T20:11:00.000Z',
             votes: 100
-          }
-        return request(app).
-        get("/api/articles/1").
-        expect(200).then(({body}) => {
-            expect(body.article).toEqual(expected);
+                })
+            );
         })
     })
 
@@ -86,21 +87,22 @@ describe("5. PATCH /api/articles/:article_id", () => {
     test("returns status 202 and the updated object", () => {
 
         const obj = { inc_votes: 10 }
-        const expected =  {
-            author: 'butter_bridge',
-            title: 'Living in the shadow of a great man',
-            article_id: 1,
-            body: 'I find this existence challenging',
-            topic: 'mitch',
-            created_at: '2020-07-09T20:11:00.000Z',
-            votes: 110
-          }
 
         return request(app)
         .patch("/api/articles/1")
         .send(obj)
         .expect(202).then(({body}) => {
-            expect(body.article).toEqual(expected)
+            expect(body.article).toEqual(
+                expect.objectContaining({
+                    author: 'butter_bridge',
+                    title: 'Living in the shadow of a great man',
+                    article_id: 1,
+                    body: 'I find this existence challenging',
+                    topic: 'mitch',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 110
+                })
+            )
         })
     })
 
@@ -167,6 +169,32 @@ describe("6. GET /api/users", () => {
                     })
                 )
             })
+
+        })
+    })
+})
+
+
+
+describe("7. GET /api/articles/:article_id (comment count)", () => {
+    test("returns status 200 and an article object with the count of comment", () => {
+
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200).then(({body}) => {
+            expect(body.article).toEqual(
+                expect.objectContaining({
+                    author: 'butter_bridge',
+                    title: 'Living in the shadow of a great man',
+                    article_id: 1,
+                    body: 'I find this existence challenging',
+                    topic: 'mitch',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 100,
+                    comment_count: expect.any(Number)
+                }
+                )
+            )
 
         })
     })
