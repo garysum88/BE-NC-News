@@ -25,6 +25,7 @@ const patchArticle = (req,res, next) => {
     .catch(next)
 }
 
+
 const getAllArticles = (req,res,next) => {
 
     fetchAllArticles().then((articles)=>{

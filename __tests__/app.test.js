@@ -175,8 +175,6 @@ describe("6. GET /api/users", () => {
     })
 })
 
-
-
 describe("7. GET /api/articles/:article_id (comment count)", () => {
     test("returns status 200 and an article object with the count of comment", () => {
 
@@ -200,8 +198,6 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
         })
     })
 })
-
-
 
 describe("8. GET /api/articles", () => {
     test("returns an articles array of article objects", () => {

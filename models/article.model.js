@@ -47,6 +47,7 @@ exports.updateArticle = (articleId,newVote) => {
 }
 }
 
+
 exports.fetchAllArticles = () => {
 
     return db.query(`
