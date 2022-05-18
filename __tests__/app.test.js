@@ -3,7 +3,8 @@ const request = require("supertest");
 const app = require("../app.js");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed");
-const data = require("../db/data/test-data")
+const data = require("../db/data/test-data");
+const { string } = require("pg-format");
 
 
 beforeEach(() => seed(data));
@@ -200,3 +201,40 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
     })
 })
 
+
+
+describe("8. GET /api/articles", () => {
+    test("returns an articles array of article objects", () => {
+
+        return request(app)
+        .get("/api/articles")
+        .expect(200).then(({body : {articles}}) => {
+
+            expect(articles).toHaveLength(12)
+
+            articles.forEach((article) => {
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        author : expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
+                    })
+                )
+            })
+        })
+        })
+
+        test("returns an articles array of article objects that is sorted by date in descending order", () => {
+
+            return request(app)
+            .get("/api/articles")
+            .expect(200).then(({body : {articles}}) => {
+    
+            expect(articles).toBeSortedBy('created_at',{descending : true})
+            })
+            })
+    })
