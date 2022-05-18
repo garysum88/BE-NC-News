@@ -91,7 +91,7 @@ describe("5. PATCH /api/articles/:article_id", () => {
         return request(app)
         .patch("/api/articles/1")
         .send(obj)
-        .expect(202).then(({body}) => {
+        .expect(200).then(({body}) => {
             expect(body.article).toEqual(
                 expect.objectContaining({
                     author: 'butter_bridge',
@@ -191,7 +191,7 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
                     topic: 'mitch',
                     created_at: '2020-07-09T20:11:00.000Z',
                     votes: 100,
-                    comment_count: expect.any(Number)
+                    comment_count: 11
                 }
                 )
             )
