@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const { getTopics } = require("./controllers/topic.controller.js")
-const { getArticle, patchArticle , getAllArticles } = require("./controllers/article.controller.js")
+const { getArticle, patchArticle , getAllArticles , getComments } = require("./controllers/article.controller.js")
 const { getUsers } = require("./controllers/user.controller")
 
 app.use(express.json())
@@ -15,6 +15,8 @@ app.patch("/api/articles/:article_id",patchArticle)
 app.get("/api/users",getUsers)
 
 app.get("/api/articles", getAllArticles )
+
+app.get("/api/articles/:article_id/comments", getComments)
 
 // 400 Error message
 app.use((err, req, res, next) => {

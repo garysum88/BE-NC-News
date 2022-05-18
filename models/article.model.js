@@ -64,3 +64,31 @@ exports.fetchAllArticles = () => {
 
 }
 
+exports.fetchComments = (articleId) => {
+
+
+    const checkArticleIdPromise =
+    db.query(`SELECT * FROM articles WHERE article_id = $1`,[articleId])
+
+    const fetchCommentsPromise = db.query('SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1',[articleId])
+    
+    return Promise.all([checkArticleIdPromise,fetchCommentsPromise])
+    .then((resolvedArr)=> {
+
+        // console.log(resolvedArr[0].rows,"check")
+        // console.log(resolvedArr[1].rows,"fetch")
+       if (!resolvedArr[0].rows.length) {
+           return Promise.reject({status: 404, message : "The article id does not exist"})
+       }
+
+       else if (!resolvedArr[1].rows.length) {
+            return Promise.reject({status: 404, message : "No comment is found on this article id"})
+       }
+
+       else {
+        return resolvedArr[1].rows
+       }
+
+    })
+}
+
