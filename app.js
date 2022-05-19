@@ -25,13 +25,14 @@ app.use("/*", (req, res, next) => {
   res.status(404).send({ message: "Endpoint not found" });
 });
 
-// 400 Error message
+// Error message
 app.use((err, req, res, next) => {
   if (err.code==="22P02") {
     res.status(400).send({ message: "Bad request" });
   }
   if (err.code==="23503") {
-    res.status(404).send({ message: "You have sent a request with an empty username and/or body." });
+    res.status(404).send({ message: "Not found" }); 
+    // !!! we are here even if we pointed to an existing article id but invalid username
   }
   else {
     next(err)
@@ -46,7 +47,6 @@ app.use((err, req, res, next) => {
 
 //500 Internal Server Error
 app.use((err, req, res, next) => {
-  console.log(err,"from app console log")
   res.status(500).send({ message: "internal server error" });
 
 });

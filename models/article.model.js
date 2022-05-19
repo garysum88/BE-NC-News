@@ -88,10 +88,9 @@ exports.fetchComments = (articleId) => {
 
 
 exports.addComment = (articleId, author, commentBody) => {
-    console.log(articleId,author,commentBody)
 
     if (typeof author === "undefined" || typeof commentBody === "undefined") {
-        return Promise.reject({status:400, message: "You have sent a request with an empty username and/or body."})
+        return Promise.reject({status:400, message: "You have not sent a valid username and/or body."})
     }
 
     else {
@@ -106,6 +105,7 @@ exports.addComment = (articleId, author, commentBody) => {
     .then((response)=>{
        return response.rows[0]
     })
+
     
 }
 

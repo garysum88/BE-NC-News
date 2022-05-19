@@ -326,7 +326,7 @@ describe("8. GET /api/articles", () => {
             .expect(400)
             .then(({body}) => {
             expect(body.message)
-            .toEqual("You have sent a request with an empty username and/or body.")
+            .toEqual("You have not sent a valid username and/or body.")
         })
 
     })
@@ -341,26 +341,51 @@ describe("8. GET /api/articles", () => {
         .expect(400)
         .then(({body}) => {
         expect(body.message)
-        .toEqual("You have sent a request with an empty username and/or body.")
+        .toEqual("You have not sent a valid username and/or body.")
     })
 })
 
 
-test("returns status 400 when passed a request to an non-existing article", () => {
+test("returns status 404 when passed a request to an non-existing article", () => {
  
     const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
 
     return request(app)
-    .post("/api/articles/100/comments")
+    .post("/api/articles/1000/comments")
     .send(reqObj)
     .expect(404)
     .then(({body}) => {
     expect(body.message)
-    .toEqual("You have sent a request with an empty username and/or body.")
+    .toEqual("Not found")
 })
 })
 
+test("returns status 400 when passed an request object with a non-existing username (author) in the users database", () => {
 
+    const reqObj = { username : "garysum", body: "They fight. They destroy. They corrupt. It always ends the same"}
 
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(reqObj)
+    .expect(404)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("Not found")
+})
+})
+
+test("returns status 400 when passed not an object", () => {
+
+    const reqObj = "I am passing a string instead of an object"
+    //    code: '23503' from console.log(err) catch block
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(reqObj)
+    .expect(400)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("You have not sent a valid username and/or body.")
+})
+})
 
 })

@@ -52,6 +52,7 @@ const postComment = (req,res,next) => {
 
 
     addComment(articleId,author,commentBody).then((comment)=> {
+
         res.status(201).send({comment})
     })
     .catch(next)
