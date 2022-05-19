@@ -258,13 +258,13 @@ describe("8. GET /api/articles", () => {
             })
         })
     
-        test("returns status 404 with passed an article id which exists but has no associated comment", () => {
+        test("returns status 200 and an empty array when passed an article id which exists but has no associated comment", () => {
 
             return request(app)
             .get("/api/articles/2/comments")
-            .expect(404)
+            .expect(200)
             .then(({body}) => {
-            expect(body.message).toEqual("No comment is found on this article id")
+            expect(body).toEqual({comments:[]})
 
             })
         })
