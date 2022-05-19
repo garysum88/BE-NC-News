@@ -175,8 +175,6 @@ describe("6. GET /api/users", () => {
     })
 })
 
-
-
 describe("7. GET /api/articles/:article_id (comment count)", () => {
     test("returns status 200 and an article object with the count of comment", () => {
 
@@ -200,8 +198,6 @@ describe("7. GET /api/articles/:article_id (comment count)", () => {
         })
     })
 })
-
-
 
 describe("8. GET /api/articles", () => {
     test("returns an articles array of article objects", () => {
@@ -237,4 +233,61 @@ describe("8. GET /api/articles", () => {
             expect(articles).toBeSortedBy('created_at',{descending : true})
             })
             })
+    })
+
+
+    describe("9. GET/api/articles/article_id/comments", () => {
+
+        test("returns status 200 and an array of comment objects", () => {
+            return request(app).
+            get("/api/articles/1/comments").
+            expect(200).then(({body:{comments}}) => {
+                expect(comments).toHaveLength(11)
+
+                comments.forEach((comment)=> {
+                    expect(comment).toEqual(
+                        expect.objectContaining({
+                            comment_id : expect.any(Number),
+                            votes: expect.any(Number),
+                            created_at : expect.any(String),
+                            author : expect.any(String),
+                            body : expect.any(String)
+                        })
+                    )
+                })
+            })
+        })
+    
+        test("returns status 200 and an empty array when passed an article id which exists but has no associated comment", () => {
+
+            return request(app)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then(({body}) => {
+            expect(body).toEqual({comments:[]})
+
+            })
+        })
+
+        test("returns status 404 with passed an article id which does not exist", () => {
+
+            return request(app)
+            .get("/api/articles/2000/comments")
+            .expect(404)
+            .then(({body}) => {
+            expect(body.message).toEqual("The article id does not exist")
+
+            })
+        })
+
+        test("returns status 400 with passed an invalid article id", () => {
+
+            return request(app)
+            .get("/api/articles/NeverLand/comments")
+            .expect(400)
+            .then(({body}) => {
+            expect(body.message).toEqual("Bad request")
+
+            })
+        })
     })

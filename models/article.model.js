@@ -47,6 +47,7 @@ exports.updateArticle = (articleId,newVote) => {
 }
 }
 
+
 exports.fetchAllArticles = () => {
 
     return db.query(`
@@ -61,5 +62,27 @@ exports.fetchAllArticles = () => {
         return articles.rows
     })
 
+}
+
+exports.fetchComments = (articleId) => {
+
+
+    const checkArticleIdPromise =
+    db.query(`SELECT * FROM articles WHERE article_id = $1`,[articleId])
+
+    const fetchCommentsPromise = db.query('SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1',[articleId])
+    
+    return Promise.all([checkArticleIdPromise,fetchCommentsPromise])
+    .then((resolvedArr)=> {
+
+       if (!resolvedArr[0].rows.length) {
+           return Promise.reject({status: 404, message : "The article id does not exist"})
+       }
+
+       else {
+        return resolvedArr[1].rows
+       }
+
+    })
 }
 
