@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const { getTopics } = require("./controllers/topic.controller.js")
-const { getArticle, patchArticle , getAllArticles , getComments } = require("./controllers/article.controller.js")
+const { getArticle, patchArticle , getAllArticles , getComments , postComment} = require("./controllers/article.controller.js")
 const { getUsers } = require("./controllers/user.controller")
 
 app.use(express.json())
@@ -18,19 +18,24 @@ app.get("/api/articles", getAllArticles )
 
 app.get("/api/articles/:article_id/comments", getComments)
 
-// 400 Error message
-app.use((err, req, res, next) => {
-  if (err.code==="22P02") {
-    res.status(400).send({ message: "Bad request" });
-  }
-  else {
-    next(err)
-  }
-});
+app.post("/api/articles/:article_id/comments", postComment)
 
 //404 Error for non-existent path
 app.use("/*", (req, res, next) => {
   res.status(404).send({ message: "Endpoint not found" });
+});
+
+// Error message
+app.use((err, req, res, next) => {
+  if (err.code==="22P02") {
+    res.status(400).send({ message: "Bad request" });
+  }
+  if (err.code==="23503") {
+    res.status(404).send({ message: "Not found" }); 
+  }
+  else {
+    next(err)
+  }
 });
 
 // Custom Error message
@@ -41,7 +46,6 @@ app.use((err, req, res, next) => {
 
 //500 Internal Server Error
 app.use((err, req, res, next) => {
-  console.log(err)
   res.status(500).send({ message: "internal server error" });
 
 });

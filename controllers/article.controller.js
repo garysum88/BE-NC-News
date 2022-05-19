@@ -1,4 +1,4 @@
-const { fetchArticle, updateArticle, fetchAllArticles, fetchComments } = require('../models/article.model')
+const { fetchArticle, updateArticle, fetchAllArticles, fetchComments , addComment} = require('../models/article.model')
 
 const getArticle = (req,res, next) => {
 
@@ -45,5 +45,18 @@ const getComments = (req,res,next) => {
     .catch(next)
 }
 
+const postComment = (req,res,next) => {
+    const articleId = req.params.article_id
+    const commentBody = req.body.body
+    const author = req.body.username
 
-module.exports = { getArticle, patchArticle, getAllArticles, getComments }
+
+    addComment(articleId,author,commentBody).then((comment)=> {
+
+        res.status(201).send({comment})
+    })
+    .catch(next)
+}
+
+
+module.exports = { getArticle, patchArticle, getAllArticles, getComments , postComment}

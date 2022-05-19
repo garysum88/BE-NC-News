@@ -86,3 +86,29 @@ exports.fetchComments = (articleId) => {
     })
 }
 
+
+exports.addComment = (articleId, author, commentBody) => {
+
+    if (typeof author === "undefined" || typeof commentBody === "undefined") {
+        return Promise.reject({status:400, message: "You have not sent a valid username and/or body."})
+    }
+
+    else {
+
+    return db.query(`
+    INSERT INTO comments
+    (article_id , author, body)
+    VALUES
+    ($1,$2,$3)
+    RETURNING *;
+    `, [articleId, author, commentBody])
+    .then((response)=>{
+       return response.rows[0]
+    })
+
+    
+}
+
+
+}
+

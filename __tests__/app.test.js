@@ -291,3 +291,115 @@ describe("8. GET /api/articles", () => {
             })
         })
     })
+
+
+
+    describe("10. POST /api/articles/:article_id/comments", () => {
+    
+        test("returns status 201 and newly added comment object when passed an article id and the object in the request", () => {
+
+            const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
+
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send(reqObj)
+            .expect(201)
+            .then(({body}) => {
+            expect(body.comment).toEqual(expect.objectContaining({
+                author : "icellusedkars",
+                body: "It only ends once. Everything that happens before that is just progress",
+                article_id : 1,
+                votes : 0,
+                created_at: expect.any(String)
+            }))
+
+            })
+        })
+
+        test("returns status 400 when passed an empty object", () => {
+
+            const reqObj = {}
+
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send(reqObj)
+            .expect(400)
+            .then(({body}) => {
+            expect(body.message)
+            .toEqual("You have not sent a valid username and/or body.")
+        })
+
+    })
+
+    test("returns status 400 when passed an invalid object", () => {
+
+        const reqObj = {popstar : "Jason Mraz", favSong : "I'm Yours"}
+
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(reqObj)
+        .expect(400)
+        .then(({body}) => {
+        expect(body.message)
+        .toEqual("You have not sent a valid username and/or body.")
+    })
+})
+
+
+test("returns status 404 when passed a request to an non-existing article", () => {
+ 
+    const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
+
+    return request(app)
+    .post("/api/articles/1000/comments")
+    .send(reqObj)
+    .expect(404)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("Not found")
+})
+})
+
+test("returns status 404 when passed an request object with a non-existing username (author) in the users database", () => {
+
+    const reqObj = { username : "garysum", body: "They fight. They destroy. They corrupt. It always ends the same"}
+
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(reqObj)
+    .expect(404)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("Not found")
+})
+})
+
+test("returns status 400 when passed not an object", () => {
+
+    const reqObj = "I am passing a string instead of an object"
+
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(reqObj)
+    .expect(400)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("You have not sent a valid username and/or body.")
+})
+})
+
+test("returns status 400 when passed not an object", () => {
+
+    const reqObj = { username : "icellusedkars", body: "We shall never surrender!"}
+
+    return request(app)
+    .post("/api/articles/DarkestHour/comments")
+    .send(reqObj)
+    .expect(400)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("Bad request")
+})
+})
+
+})
