@@ -360,7 +360,7 @@ test("returns status 404 when passed a request to an non-existing article", () =
 })
 })
 
-test("returns status 400 when passed an request object with a non-existing username (author) in the users database", () => {
+test("returns status 404 when passed an request object with a non-existing username (author) in the users database", () => {
 
     const reqObj = { username : "garysum", body: "They fight. They destroy. They corrupt. It always ends the same"}
 
