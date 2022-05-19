@@ -388,4 +388,18 @@ test("returns status 400 when passed not an object", () => {
 })
 })
 
+test("returns status 400 when passed not an object", () => {
+
+    const reqObj = { username : "icellusedkars", body: "We shall never surrender!"}
+
+    return request(app)
+    .post("/api/articles/DarkestHour/comments")
+    .send(reqObj)
+    .expect(400)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("Bad request")
+})
+})
+
 })
