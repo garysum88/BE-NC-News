@@ -377,7 +377,7 @@ test("returns status 404 when passed an request object with a non-existing usern
 test("returns status 400 when passed not an object", () => {
 
     const reqObj = "I am passing a string instead of an object"
-    //    code: '23503' from console.log(err) catch block
+
     return request(app)
     .post("/api/articles/1/comments")
     .send(reqObj)

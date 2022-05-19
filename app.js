@@ -32,7 +32,6 @@ app.use((err, req, res, next) => {
   }
   if (err.code==="23503") {
     res.status(404).send({ message: "Not found" }); 
-    // !!! we are here even if we pointed to an existing article id but invalid username
   }
   else {
     next(err)
