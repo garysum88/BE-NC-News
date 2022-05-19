@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const { getTopics } = require("./controllers/topic.controller.js")
-const { getArticle, patchArticle , getAllArticles , getComments } = require("./controllers/article.controller.js")
+const { getArticle, patchArticle , getAllArticles , getComments , postComment} = require("./controllers/article.controller.js")
 const { getUsers } = require("./controllers/user.controller")
 
 app.use(express.json())
@@ -17,6 +17,8 @@ app.get("/api/users",getUsers)
 app.get("/api/articles", getAllArticles )
 
 app.get("/api/articles/:article_id/comments", getComments)
+
+app.post("/api/articles/:article_id/comments", postComment)
 
 // 400 Error message
 app.use((err, req, res, next) => {
@@ -41,7 +43,7 @@ app.use((err, req, res, next) => {
 
 //500 Internal Server Error
 app.use((err, req, res, next) => {
-  console.log(err)
+  console.log(err,"from app console log")
   res.status(500).send({ message: "internal server error" });
 
 });

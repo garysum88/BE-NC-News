@@ -86,3 +86,34 @@ exports.fetchComments = (articleId) => {
     })
 }
 
+
+exports.addComment = (articleId, author, commentBody) => {
+    console.log(articleId,author,commentBody)
+
+    if (typeof author === "undefined" || typeof commentBody === "undefined") {
+        return Promise.reject({status:400, message: "You have sent a request with an empty username and/or body."})
+    }
+
+    else {
+
+    return db.query(`
+    INSERT INTO comments
+    (article_id , author, body)
+    VALUES
+    ($1,$2,$3)
+    RETURNING *;
+    `, [articleId, author, commentBody])
+    .then((response)=>{
+        console.log(response.rows,"hello Rose")
+       return response.rows[0]
+    })
+    .catch((err)=> {
+        console(err,"I am sad now")
+    }
+    )
+    
+}
+
+
+}
+

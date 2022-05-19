@@ -291,3 +291,84 @@ describe("8. GET /api/articles", () => {
             })
         })
     })
+
+
+
+    describe("10. POST /api/articles/:article_id/comments", () => {
+    
+        test("returns status 201 and newly added comment object when passed an article id and the object in the request", () => {
+
+            const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
+
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send(reqObj)
+            .expect(201)
+            .then(({body}) => {
+            expect(body.comment).toEqual(expect.objectContaining({
+                author : "icellusedkars",
+                body: "It only ends once. Everything that happens before that is just progress",
+                article_id : 1,
+                votes : 0,
+                created_at: expect.any(String)
+            }))
+
+            })
+        })
+
+        test("returns status 400 when passed an empty object", () => {
+
+            const reqObj = {}
+
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send(reqObj)
+            .expect(400)
+            .then(({body}) => {
+            expect(body.message)
+            .toEqual("You have sent a request with an empty username and/or body.")
+        })
+
+    })
+
+    test("returns status 400 when passed an invalid object", () => {
+
+        const reqObj = {popstar : "Jason Mraz", favSong : "I'm Yours"}
+
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(reqObj)
+        .expect(400)
+        .then(({body}) => {
+        expect(body.message)
+        .toEqual("You have sent a request with an empty username and/or body.")
+    })
+})
+
+
+// test("returns status 400 when passed a request to an non-existing article", () => {
+ 
+//     // first question : 404 or 400 for such request?
+//     // second question :  how to handle it ? from test it is now status 500
+//     //                   p.s from PATCH example I can return a custom 404 based on
+//     //                          the returned rows because length =0. but I have   error 500 here so I have no clue
+
+//     // alternatively, I can create two promises, 1-check length of rows when SELECT * from article based on that ID   , 2- the insert query
+//     // but it doesnt look smart and I don't understand why 500
+
+//     const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
+
+//     return request(app)
+//     .post("/api/articles/1000/comments")
+//     .send(reqObj)
+//     .expect(404)
+//     .then(({body}) => {
+//     expect(body.message)
+//     .toEqual("You have sent a request with an empty username and/or body.")
+// })
+// })
+
+
+
+
+})
