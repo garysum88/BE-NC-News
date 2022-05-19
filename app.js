@@ -20,19 +20,22 @@ app.get("/api/articles/:article_id/comments", getComments)
 
 app.post("/api/articles/:article_id/comments", postComment)
 
+//404 Error for non-existent path
+app.use("/*", (req, res, next) => {
+  res.status(404).send({ message: "Endpoint not found" });
+});
+
 // 400 Error message
 app.use((err, req, res, next) => {
   if (err.code==="22P02") {
     res.status(400).send({ message: "Bad request" });
   }
+  if (err.code==="23503") {
+    res.status(404).send({ message: "You have sent a request with an empty username and/or body." });
+  }
   else {
     next(err)
   }
-});
-
-//404 Error for non-existent path
-app.use("/*", (req, res, next) => {
-  res.status(404).send({ message: "Endpoint not found" });
 });
 
 // Custom Error message

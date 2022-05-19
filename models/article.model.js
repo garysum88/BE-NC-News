@@ -104,13 +104,8 @@ exports.addComment = (articleId, author, commentBody) => {
     RETURNING *;
     `, [articleId, author, commentBody])
     .then((response)=>{
-        console.log(response.rows,"hello Rose")
        return response.rows[0]
     })
-    .catch((err)=> {
-        console(err,"I am sad now")
-    }
-    )
     
 }
 

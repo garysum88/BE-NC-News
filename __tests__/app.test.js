@@ -346,27 +346,19 @@ describe("8. GET /api/articles", () => {
 })
 
 
-// test("returns status 400 when passed a request to an non-existing article", () => {
+test("returns status 400 when passed a request to an non-existing article", () => {
  
-//     // first question : 404 or 400 for such request?
-//     // second question :  how to handle it ? from test it is now status 500
-//     //                   p.s from PATCH example I can return a custom 404 based on
-//     //                          the returned rows because length =0. but I have   error 500 here so I have no clue
+    const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
 
-//     // alternatively, I can create two promises, 1-check length of rows when SELECT * from article based on that ID   , 2- the insert query
-//     // but it doesnt look smart and I don't understand why 500
-
-//     const reqObj = { username : "icellusedkars", body: "It only ends once. Everything that happens before that is just progress"}
-
-//     return request(app)
-//     .post("/api/articles/1000/comments")
-//     .send(reqObj)
-//     .expect(404)
-//     .then(({body}) => {
-//     expect(body.message)
-//     .toEqual("You have sent a request with an empty username and/or body.")
-// })
-// })
+    return request(app)
+    .post("/api/articles/100/comments")
+    .send(reqObj)
+    .expect(404)
+    .then(({body}) => {
+    expect(body.message)
+    .toEqual("You have sent a request with an empty username and/or body.")
+})
+})
 
 
 
