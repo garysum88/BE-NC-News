@@ -3,6 +3,7 @@ const { fetchArticle, updateArticle, fetchAllArticles, fetchComments , addCommen
 const getArticle = (req,res, next) => {
 
     const articleId = req.params.article_id
+    const query = req.query
 
     fetchArticle(articleId).then((article)=>{
         res.status(200).send({article})
@@ -28,7 +29,12 @@ const patchArticle = (req,res, next) => {
 
 const getAllArticles = (req,res,next) => {
 
-    fetchAllArticles().then((articles)=>{
+    const {sort_by} = req.query
+    const {order} = req.query
+    const {topic} = req.query
+ 
+
+    fetchAllArticles(sort_by,order,topic).then((articles)=>{
         res.status(200).send({articles})
     })
     .catch(next)

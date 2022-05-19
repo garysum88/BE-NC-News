@@ -403,3 +403,171 @@ test("returns status 400 when passed not an object", () => {
 })
 
 })
+
+
+
+describe("11. GET /api/articles (queries)", () => {
+    
+    test("returns an articles array of article objects | HAPPY PATH | ?sort_by=created_at", () => {
+
+        return request(app)
+        .get("/api/articles?sort_by=created_at")
+        .expect(200).then(({body : {articles}}) => {
+
+            expect(articles).toHaveLength(12)
+            expect(articles).toBeSortedBy('created_at',{descending : true})
+
+            articles.forEach((article) => {
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        author : expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number)
+                    })
+                )
+            })
+        })
+        })
+
+        test("returns an articles array of article objects | HAPPY PATH |  ?sort_by=topic", () => {
+
+            return request(app)
+            .get("/api/articles?sort_by=topic")
+            .expect(200).then(({body : {articles}}) => {
+    
+                expect(articles).toHaveLength(12)
+                expect(articles).toBeSortedBy('topic',{descending : true})
+    
+                articles.forEach((article) => {
+                    expect(article).toEqual(
+                        expect.objectContaining({
+                            author : expect.any(String),
+                            title: expect.any(String),
+                            article_id: expect.any(Number),
+                            topic: expect.any(String),
+                            created_at: expect.any(String),
+                            votes: expect.any(Number),
+                            comment_count: expect.any(Number)
+                        })
+                    )
+                })
+            })
+            })
+
+            test("returns an articles array of article objects | HAPPY PATH | ?sort_by=author&order=ASC", () => {
+
+                return request(app)
+                .get("/api/articles?sort_by=author&order=ASC")
+                .expect(200).then(({body : {articles}}) => {
+        
+                    expect(articles).toHaveLength(12)
+                    expect(articles).toBeSortedBy('author',{descending : false})
+        
+                    articles.forEach((article) => {
+                        expect(article).toEqual(
+                            expect.objectContaining({
+                                author : expect.any(String),
+                                title: expect.any(String),
+                                article_id: expect.any(Number),
+                                topic: expect.any(String),
+                                created_at: expect.any(String),
+                                votes: expect.any(Number),
+                                comment_count: expect.any(Number)
+                            })
+                        )
+                    })
+                })
+                })
+
+                test("returns an articles array of article objects | HAPPY PATH |  ?topic=cats&order=ASC", () => {
+
+                    return request(app)
+                    .get("/api/articles?topic=cats&order=ASC")
+                    .expect(200).then(({body : {articles}}) => {
+            
+                        expect(articles).toHaveLength(1)
+                        expect(articles).toBeSortedBy('author',{descending : false})
+            
+                        articles.forEach((article) => {
+                            expect(article).toEqual(
+                                expect.objectContaining({
+                                    author : expect.any(String),
+                                    title: expect.any(String),
+                                    article_id: expect.any(Number),
+                                    topic: expect.any(String),
+                                    created_at: expect.any(String),
+                                    votes: expect.any(Number),
+                                    comment_count: expect.any(Number)
+                                })
+                            )
+                        })
+                    })
+                    })
+
+                    test("returns an articles array of article objects | SAD PATH | INVALID sort_by (then default sort by time) ?sort_by=hello", () => {
+
+                        return request(app)
+                        .get("/api/articles?sort_by=hello")
+                        .expect(200).then(({body : {articles}}) => {
+                
+                            expect(articles).toHaveLength(12)
+                            expect(articles).toBeSortedBy('created_at',{descending : true})
+                
+                            articles.forEach((article) => {
+                                expect(article).toEqual(
+                                    expect.objectContaining({
+                                        author : expect.any(String),
+                                        title: expect.any(String),
+                                        article_id: expect.any(Number),
+                                        topic: expect.any(String),
+                                        created_at: expect.any(String),
+                                        votes: expect.any(Number),
+                                        comment_count: expect.any(Number)
+                                    })
+                                )
+                            })
+                        })
+                        })
+                        
+                        test("returns an articles array of article objects | SAD PATH | INVALID order (then default desc, while default sort by time when not specified) ?order=yummyfood", () => {
+
+                            return request(app)
+                            .get("/api/articles?sort_by=hello")
+                            .expect(200).then(({body : {articles}}) => {
+                    
+                                expect(articles).toHaveLength(12)
+                                expect(articles).toBeSortedBy('created_at',{descending : true})
+                    
+                                articles.forEach((article) => {
+                                    expect(article).toEqual(
+                                        expect.objectContaining({
+                                            author : expect.any(String),
+                                            title: expect.any(String),
+                                            article_id: expect.any(Number),
+                                            topic: expect.any(String),
+                                            created_at: expect.any(String),
+                                            votes: expect.any(Number),
+                                            comment_count: expect.any(Number)
+                                        })
+                                    )
+                                })
+                            })
+                            })
+      
+                    test("returns status 404 and an error message  | SAD PATH | INVALID TOPIC ?topic=katherine&order=ASC", () => {
+
+                        return request(app)
+                        .get("/api/articles?topic=katherine&order=ASC")
+                        .expect(404)
+                        .then(({body}) => {
+                        expect(body.message)
+                        .toEqual("Cannot find any article on this topic")
+                        })
+                        })
+
+
+})

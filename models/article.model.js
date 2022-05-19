@@ -48,19 +48,55 @@ exports.updateArticle = (articleId,newVote) => {
 }
 
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
 
-    return db.query(`
+    let baseQueryStr = `
     SELECT articles.* ,
     COUNT(comments.comment_id) ::INT AS comment_count
     FROM articles 
     LEFT JOIN comments
     ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at DESC;
-    `).then((articles)=> {
-        return articles.rows
-    })
+    `
+
+    const validSortBy = ["article_id","title", "topic", "author","body","created_at","vote"];
+
+    let sortByStr = 'ORDER BY '
+    if (validSortBy.includes(sort_by)) {
+    sortByStr += sort_by + " "
+    }
+    else {
+    sortByStr += "created_at "
+    }
+
+    let orderStr = ""
+    if (order === "asc" || order === "ASC") {
+        orderStr = "ASC"
+    }
+    else {
+        orderStr = "DESC"
+    }
+
+    let sortByAndOrderStr = sortByStr + orderStr
+
+
+
+    let whereStr = ""
+    if (topic) {
+        whereStr = `WHERE topic = '${topic}' `
+    }
+    
+    let finalQueryStr = baseQueryStr + whereStr + "GROUP BY articles.article_id " + sortByAndOrderStr
+
+        return db.query(finalQueryStr).then((articles)=> {
+            if(articles.rows.length===0){
+                return Promise.reject({status:404 , message: "Cannot find any article on this topic"})
+            }
+            else {
+                return articles.rows
+            }
+
+        })
+
 
 }
 
