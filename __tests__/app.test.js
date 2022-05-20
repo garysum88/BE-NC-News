@@ -548,9 +548,7 @@ describe("11. GET /api/articles (queries)", () => {
                         test("returns status 204 and return no content upon successful deletion", () => {
                             return request(app).
                             delete("/api/comments/1").
-                            expect(204).then((response) => {
-                                expect(response.body).toEqual({});
-                            })
+                            expect(204)
                         })
                     
                         test("returns status 400 when passed an invalid comment_id", () => {
