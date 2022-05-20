@@ -6,6 +6,7 @@ const { getUsers } = require("./controllers/user.controller")
 const { deleteComment } = require("./controllers/comment.controller")
 const { getAPI } = require("./controllers/other.controller.js")
 
+
 app.use(express.json())
 
 app.get("/api/topics",getTopics)

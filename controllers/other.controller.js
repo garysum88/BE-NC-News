@@ -12,4 +12,5 @@ fetchAPI().then((response)=> {
 }
 
 
+
 module.exports = { getAPI }
