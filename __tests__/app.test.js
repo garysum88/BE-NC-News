@@ -569,3 +569,135 @@ describe("11. GET /api/articles (queries)", () => {
                     
                     })
 
+
+                    describe("13. GET /api", () => {
+                        test("returns status 200 and a JSON file describing all the available endpoints on this API", () => {
+                    
+                            return request(app)
+                            .get("/api")
+                            .expect(200).then(({body}) => {
+                    
+                                const endpointJSON = {
+                                    "GET /api": {
+                                      "description": "serves up a json representation of all the available endpoints of the api"
+                                    },
+                                  
+                                    "GET /api/topics": {
+                                      "description": "serves an array of all topics",
+                                      "queries": [],
+                                      "exampleResponse": {
+                                        "topics": [{ "slug": "football", "description": "Footie!" }]
+                                      }
+                                    },
+                                  
+                                    "GET /api/articles": {
+                                      "description": "serves an array of articles",
+                                      "queries": ["topic", "sort_by", "order"],
+                                      "exampleResponse": {
+                                        "articles": [
+                                          {
+                                            "title": "Seafood substitutions are increasing",
+                                            "topic": "cooking",
+                                            "author": "weegembump",
+                                            "body": "Text from the article..",
+                                            "created_at": 1527695953341,
+                                            "comment_count" : 1
+                                          }
+                                        ]
+                                      }
+                                    },
+                                  
+                                    "GET /api/articles/:article_id": {
+                                      "description": "serves an object of article",
+                                      "queries": [],
+                                      "exampleResponse": {
+                                        "articles": 
+                                          {
+                                            "title": "Seafood substitutions are increasing",
+                                            "topic": "cooking",
+                                            "author": "weegembump",
+                                            "body": "Text from the article..",
+                                            "created_at": 1527695953341,
+                                            "comment_count" : 1
+                                          }
+                                      }
+                                    },
+                                  
+                                    "GET /api/articles/:article_id/comments": {
+                                      "description": "serves an array of comments",
+                                      "queries": [],
+                                      "exampleResponse": {
+                                        "comments": [
+                                          {
+                                            "comment_id" : 1,
+                                            "votes": 10,
+                                            "created_at" : 1527695953341,
+                                            "author" : "butter_bridge",
+                                            "body" : "This morning, I showered for nine minutes."
+                                          }
+                                        ]
+                                      }
+                                    },
+                                  
+                                    "PATCH /api/articles/:article_id": {
+                                      "description": "update the vote number of the specified article",
+                                      "queries": [],
+                                      "exampleRequest": { "inc_votes" : 1 },
+                                      "exampleResponse": {
+                                        "articles": [
+                                          {
+                                            "author" : "butter_bridge",
+                                            "title": "Living in the shadow of a great man",
+                                            "article_id": 1,
+                                            "body": "I find this existence challenging",
+                                            "topic": "mitch",
+                                            "created_at": "2020-07-09T20:11:00.000Z",
+                                            "votes": 11
+                                          }
+                                        ]
+                                      }
+                                    },
+                                  
+                                    "GET /api/users": {
+                                      "description": "serves an array of all users",
+                                      "queries": [],
+                                      "exampleResponse": {
+                                        "users": [
+                                          {
+                                            "username": "butter_bridge",
+                                            "name": "jonny",
+                                            "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                  
+                                    "POST /api/articles/:article_id/comments": {
+                                      "description": "post a comment to the specified article id",
+                                      "queries": [],
+                                      "exampleRequest":{ "username" : "icellusedkars", "body": "It only ends once. Everything that happens before that is just progress"},
+                                      "exampleResponse": {
+                                        "comment": [
+                                          {
+                                            "comment_id" : 10,
+                                            "votes": 0,
+                                            "created_at" : 1527695953341,
+                                            "author" : "icellusedkars",
+                                            "body" : "It only ends once. Everything that happens before that is just progress"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                  
+                                    "DELETE /api/comments/:comment_id": {
+                                      "description": "delete the comment of the specified comment_id",
+                                      "queries": []
+                                    }
+                                  
+                                  }
+                                  
+                                expect(body).toEqual(endpointJSON)
+                    
+                            })
+                        })
+                    })
