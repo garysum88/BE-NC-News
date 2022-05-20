@@ -541,3 +541,31 @@ describe("11. GET /api/articles (queries)", () => {
 
                         
                     })
+
+
+                    describe("12. DELETE /api/comments/:comment_id", () => {
+
+                        test("returns status 204 and return no content upon successful deletion", () => {
+                            return request(app).
+                            delete("/api/comments/1").
+                            expect(204)
+                        })
+                    
+                        test("returns status 400 when passed an invalid comment_id", () => {
+                            return request(app).
+                            delete("/api/comments/katherine").
+                            expect(400).then(({body}) => {
+                                expect(body.message).toEqual("Bad request");
+                            })
+                        })
+                    
+                        test("returns status 404 when passed a non-exist comment_id", () => {
+                            return request(app).
+                            delete("/api/comments/721").
+                            expect(404).then(({body}) => {
+                                expect(body.message).toEqual("The comment_id you entered does not exist");
+                            })
+                        })
+                    
+                    })
+

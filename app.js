@@ -3,6 +3,7 @@ const app = express()
 const { getTopics } = require("./controllers/topic.controller.js")
 const { getArticle, patchArticle , getAllArticles , getComments , postComment} = require("./controllers/article.controller.js")
 const { getUsers } = require("./controllers/user.controller")
+const { deleteComment } = require("./controllers/comment.controller")
 
 app.use(express.json())
 
@@ -20,6 +21,7 @@ app.get("/api/articles/:article_id/comments", getComments)
 
 app.post("/api/articles/:article_id/comments", postComment)
 
+app.delete("/api/comments/:comment_id", deleteComment)
 
 //404 Error for non-existent path
 app.use("/*", (req, res, next) => {
