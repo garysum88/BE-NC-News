@@ -508,66 +508,61 @@ describe("11. GET /api/articles (queries)", () => {
                     })
                     })
 
+
+                test("returns an articles array of article objects | SAD PATH | non-exist topic ?topic=dogs", () => {
+
+                    return request(app)
+                    .get("/api/articles?topic=dogs")
+                    .expect(400).then(({body}) => {
+            
+                        expect(body.message).toEqual("The topic you have entered does not exist")
+                       
+            
+                        })
+                    })
+
+
                     test("returns an articles array of article objects | SAD PATH | INVALID sort_by (then default sort by time) ?sort_by=hello", () => {
 
                         return request(app)
                         .get("/api/articles?sort_by=hello")
-                        .expect(200).then(({body : {articles}}) => {
+                        .expect(400).then(({body}) => {
                 
-                            expect(articles).toHaveLength(12)
-                            expect(articles).toBeSortedBy('created_at',{descending : true})
-                
-                            articles.forEach((article) => {
-                                expect(article).toEqual(
-                                    expect.objectContaining({
-                                        author : expect.any(String),
-                                        title: expect.any(String),
-                                        article_id: expect.any(Number),
-                                        topic: expect.any(String),
-                                        created_at: expect.any(String),
-                                        votes: expect.any(Number),
-                                        comment_count: expect.any(Number)
-                                    })
-                                )
-                            })
+                        expect(body.message).toEqual("Bad request - invalid sort_by")
+
                         })
                         })
                         
                         test("returns an articles array of article objects | SAD PATH | INVALID order (then default desc, while default sort by time when not specified) ?order=yummyfood", () => {
 
                             return request(app)
-                            .get("/api/articles?sort_by=hello")
-                            .expect(200).then(({body : {articles}}) => {
-                    
-                                expect(articles).toHaveLength(12)
-                                expect(articles).toBeSortedBy('created_at',{descending : true})
-                    
-                                articles.forEach((article) => {
-                                    expect(article).toEqual(
-                                        expect.objectContaining({
-                                            author : expect.any(String),
-                                            title: expect.any(String),
-                                            article_id: expect.any(Number),
-                                            topic: expect.any(String),
-                                            created_at: expect.any(String),
-                                            votes: expect.any(Number),
-                                            comment_count: expect.any(Number)
-                                        })
-                                    )
-                                })
+                            .get("/api/articles?order=yummyfood")
+                            .expect(400).then(({body}) => {
+                                expect(body.message).toEqual("Bad request - invalid order (neither asc nor desc)")
                             })
                             })
       
-                    test("returns status 404 and an error message  | SAD PATH | INVALID TOPIC ?topic=katherine&order=ASC", () => {
+                    test("returns status 404 and an error message  | SAD PATH | INVALID TOPIC ?topic=1234567", () => {
 
                         return request(app)
-                        .get("/api/articles?topic=katherine&order=ASC")
-                        .expect(404)
+                        .get("/api/articles?topic=1234567")
+                        .expect(400)
                         .then(({body}) => {
                         expect(body.message)
-                        .toEqual("Cannot find any article on this topic")
+                        .toEqual("The topic you have entered does not exist")
                         })
                         })
 
 
-})
+                        test("returns an articles array of article objects | HAPPY PATH | existing topic but no article ?topic=paper", () => {
+
+                            return request(app)
+                            .get("/api/articles?topic=paper")
+                            .expect(200).then(({body}) => {
+    
+                                expect(body.article).toEqual()
+                               
+                                })
+                            })
+                        
+                    })

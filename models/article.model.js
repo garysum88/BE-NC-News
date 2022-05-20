@@ -65,15 +65,20 @@ exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
     sortByStr += sort_by + " "
     }
     else {
-    sortByStr += "created_at "
+    return Promise.reject({status : 400, message : "Bad request - invalid sort_by"})
     }
+
+
 
     let orderStr = ""
     if (order === "asc" || order === "ASC") {
         orderStr = "ASC"
     }
-    else {
+    else if (order === "desc" || order === "DESC") {
         orderStr = "DESC"
+    }
+    else {
+        return Promise.reject({status :400 , message : "Bad request - invalid order (neither asc nor desc)"})
     }
 
     let sortByAndOrderStr = sortByStr + orderStr
@@ -84,16 +89,34 @@ exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
     if (topic) {
         whereStr = `WHERE topic = '${topic}' `
     }
+    else {
+        whereStr = ""
+    }
     
     let finalQueryStr = baseQueryStr + whereStr + "GROUP BY articles.article_id " + sortByAndOrderStr
 
-        return db.query(finalQueryStr).then((articles)=> {
-            if(articles.rows.length===0){
-                return Promise.reject({status:404 , message: "Cannot find any article on this topic"})
-            }
-            else {
-                return articles.rows
-            }
+
+    const checkTopicPromise = db.query('SELECT slug FROM topics;')
+
+    const queryPromise =  db.query(finalQueryStr)
+    
+    return Promise.all([checkTopicPromise,queryPromise])
+    .then((resolvedArr)=> {
+
+        const topicArray = []
+
+        resolvedArr[0].rows.forEach((topic)=> {
+            topicArray.push(topic.slug)
+        })
+
+        if (topicArray.includes(topic) || typeof topic === "undefined") {
+                return resolvedArr[1].rows
+        }
+
+        else {
+            return Promise.reject({status: 400, message : "The topic you have entered does not exist"})
+        }
+
 
         })
 
@@ -116,6 +139,8 @@ exports.fetchComments = (articleId) => {
        }
 
        else {
+
+
         return resolvedArr[1].rows
        }
 
