@@ -109,8 +109,11 @@ exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
             topicArray.push(topic.slug)
         })
 
+
         if (topicArray.includes(topic) || typeof topic === "undefined") {
+
                 return resolvedArr[1].rows
+
         }
 
         else {
@@ -119,7 +122,6 @@ exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
 
 
         })
-
 
 }
 

@@ -407,31 +407,6 @@ test("returns status 400 when passed not an object", () => {
 
 
 describe("11. GET /api/articles (queries)", () => {
-    
-    test("returns an articles array of article objects | HAPPY PATH | ?sort_by=created_at", () => {
-
-        return request(app)
-        .get("/api/articles?sort_by=created_at")
-        .expect(200).then(({body : {articles}}) => {
-
-            expect(articles).toHaveLength(12)
-            expect(articles).toBeSortedBy('created_at',{descending : true})
-
-            articles.forEach((article) => {
-                expect(article).toEqual(
-                    expect.objectContaining({
-                        author : expect.any(String),
-                        title: expect.any(String),
-                        article_id: expect.any(Number),
-                        topic: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        comment_count: expect.any(Number)
-                    })
-                )
-            })
-        })
-        })
 
         test("returns an articles array of article objects | HAPPY PATH |  ?sort_by=topic", () => {
 
@@ -483,14 +458,14 @@ describe("11. GET /api/articles (queries)", () => {
                 })
                 })
 
-                test("returns an articles array of article objects | HAPPY PATH |  ?topic=cats&order=ASC", () => {
+                test("returns an articles array of article objects | HAPPY PATH |  ?topic=cats&order=DSC", () => {
 
                     return request(app)
                     .get("/api/articles?topic=cats&order=ASC")
                     .expect(200).then(({body : {articles}}) => {
             
                         expect(articles).toHaveLength(1)
-                        expect(articles).toBeSortedBy('author',{descending : false})
+                        expect(articles).toBeSortedBy('author',{descending : true})
             
                         articles.forEach((article) => {
                             expect(article).toEqual(
@@ -507,6 +482,17 @@ describe("11. GET /api/articles (queries)", () => {
                         })
                     })
                     })
+
+                    test("returns an articles array of article objects | HAPPY PATH | existing topic but no article ?topic=paper", () => {
+
+                        return request(app)
+                        .get("/api/articles?topic=paper")
+                        .expect(200).then(({body}) => {
+
+                            expect(body.articles).toEqual([])
+                           
+                            })
+                        })
 
 
                 test("returns an articles array of article objects | SAD PATH | non-exist topic ?topic=dogs", () => {
@@ -553,16 +539,5 @@ describe("11. GET /api/articles (queries)", () => {
                         })
                         })
 
-
-                        test("returns an articles array of article objects | HAPPY PATH | existing topic but no article ?topic=paper", () => {
-
-                            return request(app)
-                            .get("/api/articles?topic=paper")
-                            .expect(200).then(({body}) => {
-    
-                                expect(body.article).toEqual()
-                               
-                                })
-                            })
                         
                     })
