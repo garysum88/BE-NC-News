@@ -48,19 +48,80 @@ exports.updateArticle = (articleId,newVote) => {
 }
 
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
 
-    return db.query(`
+    let baseQueryStr = `
     SELECT articles.* ,
     COUNT(comments.comment_id) ::INT AS comment_count
     FROM articles 
     LEFT JOIN comments
     ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at DESC;
-    `).then((articles)=> {
-        return articles.rows
-    })
+    `
+
+    const validSortBy = ["article_id","title", "topic", "author","body","created_at","vote"];
+
+    let sortByStr = 'ORDER BY '
+    if (validSortBy.includes(sort_by)) {
+    sortByStr += sort_by + " "
+    }
+    else {
+    return Promise.reject({status : 400, message : "Bad request - invalid sort_by"})
+    }
+
+
+
+    let orderStr = ""
+    if (order === "asc" || order === "ASC") {
+        orderStr = "ASC"
+    }
+    else if (order === "desc" || order === "DESC") {
+        orderStr = "DESC"
+    }
+    else {
+        return Promise.reject({status :400 , message : "Bad request - invalid order (neither asc nor desc)"})
+    }
+
+    let sortByAndOrderStr = sortByStr + orderStr
+
+
+
+    let whereStr = ""
+    if (topic) {
+        whereStr = `WHERE topic = '${topic}' `
+    }
+    else {
+        whereStr = ""
+    }
+    
+    let finalQueryStr = baseQueryStr + whereStr + "GROUP BY articles.article_id " + sortByAndOrderStr
+
+
+    const checkTopicPromise = db.query('SELECT slug FROM topics;')
+
+    const queryPromise =  db.query(finalQueryStr)
+    
+    return Promise.all([checkTopicPromise,queryPromise])
+    .then((resolvedArr)=> {
+
+        const topicArray = []
+
+        resolvedArr[0].rows.forEach((topic)=> {
+            topicArray.push(topic.slug)
+        })
+
+
+        if (topicArray.includes(topic) || typeof topic === "undefined") {
+
+                return resolvedArr[1].rows
+
+        }
+
+        else {
+            return Promise.reject({status: 400, message : "The topic you have entered does not exist"})
+        }
+
+
+        })
 
 }
 
@@ -80,6 +141,8 @@ exports.fetchComments = (articleId) => {
        }
 
        else {
+
+
         return resolvedArr[1].rows
        }
 

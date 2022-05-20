@@ -28,11 +28,15 @@ const patchArticle = (req,res, next) => {
 
 const getAllArticles = (req,res,next) => {
 
-    fetchAllArticles().then((articles)=>{
+    const {sort_by, order, topic} = req.query
+
+    fetchAllArticles(sort_by,order,topic).then((articles)=>{
+
         res.status(200).send({articles})
     })
     .catch(next)
 }
+
 
 
 const getComments = (req,res,next) => {
@@ -49,7 +53,6 @@ const postComment = (req,res,next) => {
     const articleId = req.params.article_id
     const commentBody = req.body.body
     const author = req.body.username
-
 
     addComment(articleId,author,commentBody).then((comment)=> {
 
