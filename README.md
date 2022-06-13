@@ -1,9 +1,24 @@
-# GARYSUM888's Northcoders News API
+# ThisNews (A News API)
 
 
 ## Background
 
-We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
+**ThisNews** is a news API built on Node.JS trying to mimic the building of a real world backend service which should provide information to the front end archirecture.
+
+In this API, user can have access to different articles, ratings and discussions just like Reddit. Functionalities of this API include the following:
+
+* Fetch all articles available on the database
+* Fetch articles by article_id and topic,
+* Fetch comments of an article
+* Post a comment to an article
+* Delete a comment of an article
+* Give an upvote to an article
+* Generate a list of all authors
+* Generate a list of all topics
+
+ThisNews is built using Node.JS, Express and PostgreSQL
+
+
 
 Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
 

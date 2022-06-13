@@ -6,6 +6,11 @@ const { getUsers } = require("./controllers/user.controller")
 const { deleteComment } = require("./controllers/comment.controller")
 const { getAPI } = require("./controllers/other.controller.js")
 
+const cors = require('cors');
+
+
+
+app.use(cors());
 
 app.use(express.json())
 
