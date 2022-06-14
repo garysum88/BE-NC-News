@@ -58,7 +58,7 @@ exports.fetchAllArticles = (sort_by="created_at",order="desc",topic) => {
     ON articles.article_id = comments.article_id
     `
 
-    const validSortBy = ["article_id","title", "topic", "author","body","created_at","vote"];
+    const validSortBy = ["article_id","title", "topic", "author","body","created_at","votes"];
 
     let sortByStr = 'ORDER BY '
     if (validSortBy.includes(sort_by)) {
